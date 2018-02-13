@@ -1,3 +1,4 @@
+
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
@@ -19,11 +20,6 @@ connection.connect(function(err) {
 
   // Empty shopping cart.
 
-connection.query("SELECT id, product, price FROM products", function(err, res) {
-        console.log(res);
-        promptOrder();
-  });
-
   let itemInCart = {};
   let orderQuantity = 0;
 
@@ -36,23 +32,26 @@ const promptOrder = () => {
         },
         {
             type: "input",
-            name: "orderQuantity",
+            name: "quantityInput",
             message: "How many units would you like?"
         }
     ]).then(answers => {
         connection.query("SELECT * FROM products WHERE id = ?", [answers.orderID], 
         function(err, res) {
-            itemInCart = res;
-            orderQuantity = answers.orderQuantity;
-            itemInCart.stock_quantity >= orderQuantity 
-                ? orderFullfill(itemInCart, orderQuantity) 
-                : (console.log("Insufficient quantity!"), connection.close());  
-            }
-        );
+            itemInCart = res[0];
+            orderQuantity = answers.quantityInput;
+
+            itemInCart.stock_quantity >= orderQuantity
+            ? orderFullfill(itemInCart, orderQuantity)
+            : (console.log("Insufficient quantity!"));  
+        }
+    );
     }).catch(err => {
-        console.log(err);
+       console.log(err); 
     });
 };
+
+
 
 const orderFullfill = (itemInCart, orderQuantity) => {
     connection.query('UPDATE products SET Product_Sales = Product_Sales + ?, WHERE ?',
@@ -63,7 +62,17 @@ const orderFullfill = (itemInCart, orderQuantity) => {
     ], 
         function(err, res) {
             console.log(res);
+            console.log(
+                `You just bought ${orderQuantity} unit(s) of ${
+                  itemInCart.product}. Your total is $${itemInCart.price * orderQuantity}. 
+                  Thank you for shopping with Bamazon!`
+              );
         } 
     );
-connection.close();
 };
+
+
+connection.query("SELECT id, product, price FROM products", function(err, res) {
+    console.log(res);
+    promptOrder();
+});

@@ -11,11 +11,11 @@ A Node.js & MySQL digital storefront. This is a command line Node app that mimic
 Receives orders from customers via the command line and interfaces with mySQL to deplete stock from the store's inventory.
 
 
-![Iquirer Prompts](/images/nodePROMPTS.PNG)
+![Iquirer Prompts](./nodePROMPTS.PNG)
 
-![Order Filled](/images/successfullOrder.PNG)
+![Order Filled](./successfullOrder.PNG)
 
-![Failed Order](/images/failedOrder.PNG)
+![Failed Order](./failedOrder.PNG)
 
 
 
